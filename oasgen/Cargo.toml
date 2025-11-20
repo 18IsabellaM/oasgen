@@ -1,7 +1,7 @@
 [package]
 name = "oasgen"
-version = "0.25.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 authors = ["Kurt Wolf <kurtwolfbuilds@gmail.com>"]
 description = "Generates OpenAPI 3.0 spec based on Rust code. Works with axum, actix-web, or independent of a web framework."
 license = "MIT"
@@ -46,7 +46,7 @@ axum = { version = "0.8.1", optional = true, default-features = false, features 
 futures = "0.3.28"
 http = "1.0.0"
 indexmap = "2"
-openapiv3-extended = { version = "6" }
+openapiv3-extended = { version = "6.0.1" }
 oasgen-core.workspace = true
 oasgen-macro.workspace = true
 serde = { version = "1.0.171", features = ["derive"] }
