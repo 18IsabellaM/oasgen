@@ -1,0 +1,33 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: ''
+paths:
+  /assets:
+    get:
+      operationId: list_assets
+      parameters:
+      - name: owner
+        schema:
+          type: integer
+        in: query
+        style: form
+      - name: disabled_assets
+        schema:
+          type: boolean
+        in: query
+        style: form
+      responses: {}
+components:
+  schemas:
+    AssetFilter:
+      description: Filter assets
+      type: object
+      properties:
+        owner:
+          type: integer
+        disabled_assets:
+          nullable: true
+          type: boolean
+      required:
+      - owner

@@ -124,11 +124,21 @@ where
 
     fn schema_ref() -> ReferenceOr<Schema> {
         let mut schema = T::schema_ref();
-        let Some(s) = schema.as_mut() else {
-            return schema;
-        };
-        s.nullable = true;
-        schema
+        match schema.as_mut() {
+            // Inline schema: set `nullable` directly on it.
+            Some(s) => {
+                s.nullable = true;
+                schema
+            }
+            // The inner type renders as a `$ref`. OpenAPI 3.0.x ignores keywords
+            // placed as siblings of `$ref`, so wrap the reference in `allOf` and
+            // set `nullable` on the wrapper to preserve the `Option`'s nullability.
+            None => {
+                let mut wrapper = Schema::new_all_of(vec![schema]);
+                wrapper.nullable = true;
+                ReferenceOr::Item(wrapper)
+            }
+        }
     }
 }
 

@@ -1,0 +1,17 @@
+type: object
+properties:
+  sex:
+    nullable: true
+    allOf:
+    - $ref: '#/components/schemas/Sex'
+  name:
+    nullable: true
+    allOf:
+    - $ref: '#/components/schemas/Name'
+  nickname:
+    nullable: true
+    type: string
+  age:
+    type: integer
+required:
+- age

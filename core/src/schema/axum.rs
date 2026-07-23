@@ -31,7 +31,21 @@ impl<T: OaParameter> OaParameter for axum::extract::Query<T> {
                 _ => None
             })
             .flatten()
-            .map(|(k, v)| RefOr::Item(oa::Parameter::query(k, v)))
+            .map(|(k, v)| {
+                // Query strings have no concept of JSON `null`; optionality is
+                // expressed by the parameter being non-required, not by a nullable
+                // schema. Strip any `nullable` flag so an `Option<T>` field renders
+                // the inner type's schema. The parameter stays non-required (the
+                // default for `Parameter::query`).
+                let v = match v {
+                    RefOr::Item(mut schema) => {
+                        schema.nullable = false;
+                        RefOr::Item(schema)
+                    }
+                    other => other,
+                };
+                RefOr::Item(oa::Parameter::query(k, v))
+            })
             .collect()
     }
 }
