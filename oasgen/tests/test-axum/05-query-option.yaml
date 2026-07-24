@@ -11,6 +11,9 @@ paths:
         required: true
         schema:
           type: integer
+          format: int32
+          minimum: -2147483648
+          maximum: 2147483647
         in: query
         style: form
       - name: disabled_assets
@@ -29,6 +32,9 @@ components:
       properties:
         owner:
           type: integer
+          format: int32
+          minimum: -2147483648
+          maximum: 2147483647
         disabled_assets:
           nullable: true
           type: boolean

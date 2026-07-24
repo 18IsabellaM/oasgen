@@ -17,6 +17,9 @@ paths:
         required: true
         schema:
           type: integer
+          format: int32
+          minimum: -2147483648
+          maximum: 2147483647
         in: query
         style: form
       responses:
@@ -32,6 +35,9 @@ components:
           type: boolean
         assigned_to:
           type: integer
+          format: int32
+          minimum: -2147483648
+          maximum: 2147483647
       required:
       - completed
       - assigned_to

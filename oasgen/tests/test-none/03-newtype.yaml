@@ -2,11 +2,17 @@ type: object
 properties:
   id:
     type: integer
+    format: int32
+    minimum: -2147483648
+    maximum: 2147483647
   prop_a:
     type: object
     properties:
       test:
         type: integer
+        format: int32
+        minimum: -2147483648
+        maximum: 2147483647
     required:
     - test
   prop_b:
@@ -14,6 +20,9 @@ properties:
     properties:
       test:
         type: integer
+        format: int32
+        minimum: -2147483648
+        maximum: 2147483647
     required:
     - test
   prop_d:

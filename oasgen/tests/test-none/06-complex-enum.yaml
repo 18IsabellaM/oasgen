@@ -15,6 +15,9 @@ components:
             - A
           c:
             type: integer
+            format: int32
+            minimum: -2147483648
+            maximum: 2147483647
         required:
         - t
         - c
@@ -29,6 +32,9 @@ components:
             properties:
               test:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
             required:
             - test
         required:
@@ -46,12 +52,18 @@ components:
               properties:
                 Days:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Days
             - type: object
               properties:
                 Months:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Months
         required:
@@ -72,12 +84,18 @@ components:
         properties:
           Days:
             type: integer
+            format: int64
+            minimum: 0
+            maximum: 4294967295
         required:
         - Days
       - type: object
         properties:
           Months:
             type: integer
+            format: int64
+            minimum: 0
+            maximum: 4294967295
         required:
         - Months
     ExternallyTagged:
@@ -86,6 +104,9 @@ components:
         properties:
           A:
             type: integer
+            format: int32
+            minimum: -2147483648
+            maximum: 2147483647
         required:
         - A
       - type: object
@@ -95,6 +116,9 @@ components:
             properties:
               test:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
             required:
             - test
         required:
@@ -107,12 +131,18 @@ components:
               properties:
                 Days:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Days
             - type: object
               properties:
                 Months:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Months
         required:
@@ -132,6 +162,9 @@ components:
             properties:
               A:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
             required:
             - A
           - type: object
@@ -141,6 +174,9 @@ components:
                 properties:
                   test:
                     type: integer
+                    format: int32
+                    minimum: -2147483648
+                    maximum: 2147483647
                 required:
                 - test
             required:
@@ -153,12 +189,18 @@ components:
                   properties:
                     Days:
                       type: integer
+                      format: int64
+                      minimum: 0
+                      maximum: 4294967295
                   required:
                   - Days
                 - type: object
                   properties:
                     Months:
                       type: integer
+                      format: int64
+                      minimum: 0
+                      maximum: 4294967295
                   required:
                   - Months
             required:
@@ -175,6 +217,9 @@ components:
             properties:
               test:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
               type:
                 type: string
                 enum:
@@ -196,12 +241,18 @@ components:
                 properties:
                   Days:
                     type: integer
+                    format: int64
+                    minimum: 0
+                    maximum: 4294967295
                 required:
                 - Days
               - type: object
                 properties:
                   Months:
                     type: integer
+                    format: int64
+                    minimum: 0
+                    maximum: 4294967295
                 required:
                 - Months
           - type: object
@@ -225,6 +276,9 @@ components:
                 - A
               c:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
             required:
             - t
             - c
@@ -239,6 +293,9 @@ components:
                 properties:
                   test:
                     type: integer
+                    format: int32
+                    minimum: -2147483648
+                    maximum: 2147483647
                 required:
                 - test
             required:
@@ -256,12 +313,18 @@ components:
                   properties:
                     Days:
                       type: integer
+                      format: int64
+                      minimum: 0
+                      maximum: 4294967295
                   required:
                   - Days
                 - type: object
                   properties:
                     Months:
                       type: integer
+                      format: int64
+                      minimum: 0
+                      maximum: 4294967295
                   required:
                   - Months
             required:
@@ -281,10 +344,16 @@ components:
         untagged_inline:
           oneOf:
           - type: integer
+            format: int32
+            minimum: -2147483648
+            maximum: 2147483647
           - type: object
             properties:
               test:
                 type: integer
+                format: int32
+                minimum: -2147483648
+                maximum: 2147483647
             required:
             - test
           - oneOf:
@@ -292,12 +361,18 @@ components:
               properties:
                 Days:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Days
             - type: object
               properties:
                 Months:
                   type: integer
+                  format: int64
+                  minimum: 0
+                  maximum: 4294967295
               required:
               - Months
       required:
@@ -315,6 +390,9 @@ components:
         properties:
           test:
             type: integer
+            format: int32
+            minimum: -2147483648
+            maximum: 2147483647
           type:
             type: string
             enum:
@@ -336,12 +414,18 @@ components:
             properties:
               Days:
                 type: integer
+                format: int64
+                minimum: 0
+                maximum: 4294967295
             required:
             - Days
           - type: object
             properties:
               Months:
                 type: integer
+                format: int64
+                minimum: 0
+                maximum: 4294967295
             required:
             - Months
       - type: object
@@ -356,10 +440,16 @@ components:
     Untagged:
       oneOf:
       - type: integer
+        format: int32
+        minimum: -2147483648
+        maximum: 2147483647
       - type: object
         properties:
           test:
             type: integer
+            format: int32
+            minimum: -2147483648
+            maximum: 2147483647
         required:
         - test
       - oneOf:
@@ -367,11 +457,17 @@ components:
           properties:
             Days:
               type: integer
+              format: int64
+              minimum: 0
+              maximum: 4294967295
           required:
           - Days
         - type: object
           properties:
             Months:
               type: integer
+              format: int64
+              minimum: 0
+              maximum: 4294967295
           required:
           - Months

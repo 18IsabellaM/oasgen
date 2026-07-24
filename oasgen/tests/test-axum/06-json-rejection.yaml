@@ -53,6 +53,9 @@ components:
         id:
           description: Identifier assigned by the server
           type: integer
+          format: int64
+          minimum: 0
+          maximum: 4294967295
       required:
       - id
     NewTask:

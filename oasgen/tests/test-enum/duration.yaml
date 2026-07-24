@@ -3,11 +3,17 @@ oneOf:
   properties:
     Days:
       type: integer
+      format: int64
+      minimum: 0
+      maximum: 4294967295
   required:
   - Days
 - type: object
   properties:
     Months:
       type: integer
+      format: int64
+      minimum: 0
+      maximum: 4294967295
   required:
   - Months

@@ -22,12 +22,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: Task title cannot be empty
         '422':
           description: Priority must be between 1 and 5
         '500':
           description: Failed to save task
-        '400':
-          description: Task title cannot be empty
 components:
   schemas:
     Task:
@@ -38,6 +38,9 @@ components:
         priority:
           nullable: true
           type: integer
+          format: int32
+          minimum: 0
+          maximum: 255
       required:
       - title
     TaskResponse:
@@ -45,6 +48,9 @@ components:
       properties:
         id:
           type: integer
+          format: int64
+          minimum: 0
+          maximum: 4294967295
         message:
           type: string
       required:

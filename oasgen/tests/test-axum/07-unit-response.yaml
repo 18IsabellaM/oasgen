@@ -12,6 +12,9 @@ paths:
         required: true
         schema:
           type: integer
+          format: int64
+          minimum: 0
+          maximum: 9223372036854775807
         in: path
         style: simple
       responses:
