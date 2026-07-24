@@ -13,7 +13,9 @@ paths:
           type: integer
         in: path
         style: simple
-      responses: {}
+      responses:
+        '400':
+          description: A path parameter could not be parsed into its expected type.
   /tasks/{id}/{tu}:
     get:
       operationId: get_stuff
@@ -30,7 +32,9 @@ paths:
           type: integer
         in: path
         style: simple
-      responses: {}
+      responses:
+        '400':
+          description: A path parameter could not be parsed into its expected type.
 components:
   schemas:
     TaskFilter:

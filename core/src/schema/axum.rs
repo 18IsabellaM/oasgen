@@ -86,6 +86,13 @@ impl<T: OaParameter> OaParameter for axum::extract::Path<T> {
             .map(|s| RefOr::Item(oa::Parameter::path("path", s)))
             .collect()
     }
+
+    fn extractor_responses() -> Vec<(u16, String)> {
+        vec![(
+            400,
+            "A path parameter could not be parsed into its expected type.".to_string(),
+        )]
+    }
 }
 
 #[cfg(feature = "qs")]
