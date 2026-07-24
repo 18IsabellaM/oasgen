@@ -18,7 +18,9 @@ paths:
           type: boolean
         in: query
         style: form
-      responses: {}
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     AssetFilter:

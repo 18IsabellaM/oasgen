@@ -11,6 +11,10 @@ pub trait OperationExt {
     /// Records a bodyless response for `status`, leaving any existing entry for
     /// that status code untouched.
     fn add_response_if_absent(&mut self, status: u16, description: String);
+
+    /// Records a 200 response that carries no body, for handlers that return
+    /// nothing on success.
+    fn add_response_success_empty(&mut self);
 }
 
 impl OperationExt for Operation {
@@ -24,6 +28,16 @@ impl OperationExt for Operation {
                     ..Response::default()
                 })
             });
+    }
+
+    fn add_response_success_empty(&mut self) {
+        self.responses.responses.insert(
+            StatusCode::Code(200),
+            RefOr::Item(Response {
+                description: "OK".to_string(),
+                ..Response::default()
+            }),
+        );
     }
 }
 

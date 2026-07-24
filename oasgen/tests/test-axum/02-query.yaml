@@ -19,7 +19,9 @@ paths:
           type: integer
         in: query
         style: form
-      responses: {}
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     TaskFilter:

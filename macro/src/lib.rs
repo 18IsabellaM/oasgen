@@ -101,8 +101,12 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
         .map(|t| {
             quote! {
                 let body = <#t as ::oasgen::OaParameter>::body_schema();
+                // A handler that returns nothing on success still succeeds, so
+                // record a bodyless 200 rather than omitting the response.
                 if body.is_some() {
                     op.add_response_success_json(body);
+                } else {
+                    ::oasgen::OperationExt::add_response_success_empty(&mut op);
                 }
             }
         })

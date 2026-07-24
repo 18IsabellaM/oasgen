@@ -14,6 +14,8 @@ paths:
         in: path
         style: simple
       responses:
+        '200':
+          description: OK
         '400':
           description: A path parameter could not be parsed into its expected type.
   /tasks/{id}/{tu}:
@@ -33,6 +35,8 @@ paths:
         in: path
         style: simple
       responses:
+        '200':
+          description: OK
         '400':
           description: A path parameter could not be parsed into its expected type.
 components:
