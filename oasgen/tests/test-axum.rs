@@ -6,4 +6,5 @@ fn test_axum() {
     t.pass("tests/test-axum/03-path.rs");
     t.pass("tests/test-axum/04-status_code.rs");
     t.pass("tests/test-axum/05-query-option.rs");
+    t.pass("tests/test-axum/06-json-rejection.rs");
 }

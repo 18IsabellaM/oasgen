@@ -13,6 +13,20 @@ impl<T: OaSchema> OaParameter for axum::extract::Json<T> {
     fn body_schema() -> Option<RefOr<Schema>> {
         T::body_schema()
     }
+
+    fn extractor_responses() -> Vec<(u16, String)> {
+        vec![
+            (
+                400,
+                "The request body could not be parsed as JSON.".to_string(),
+            ),
+            (
+                422,
+                "The request body is valid JSON but does not match the expected schema."
+                    .to_string(),
+            ),
+        ]
+    }
 }
 impl<T> OaParameter for axum::extract::Extension<T> {}
 impl<T> OaParameter for axum::extract::State<T> {}

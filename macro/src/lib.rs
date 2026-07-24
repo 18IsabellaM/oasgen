@@ -132,6 +132,13 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
             }
         })
         .collect();
+    let extractor_responses = quote! {
+        #(
+            for (status, description) in <#args as ::oasgen::OaParameter>::extractor_responses() {
+                ::oasgen::OperationExt::add_response_if_absent(&mut op, status, description);
+            }
+        )*
+    };
     let tags = attr
         .tags
         .iter()
@@ -181,6 +188,7 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
             #ret
             #description
             #summary
+            #extractor_responses
             #(#error_responses)*
             #(#tags)*
             op

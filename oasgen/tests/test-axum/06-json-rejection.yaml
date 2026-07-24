@@ -1,0 +1,66 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: ''
+paths:
+  /tasks:
+    put:
+      description: A handler documenting 422 itself keeps its own description
+      operationId: replace_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTask'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedTask'
+        '400':
+          description: The request body could not be parsed as JSON.
+        '422':
+          description: Task title cannot be empty
+    post:
+      description: Both `Json` rejection codes are documented automatically
+      operationId: create_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTask'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedTask'
+        '400':
+          description: The request body could not be parsed as JSON.
+        '422':
+          description: The request body is valid JSON but does not match the expected schema.
+components:
+  schemas:
+    CreatedTask:
+      description: The created task
+      type: object
+      properties:
+        id:
+          description: Identifier assigned by the server
+          type: integer
+      required:
+      - id
+    NewTask:
+      description: A task to create
+      type: object
+      properties:
+        title:
+          description: Human readable title
+          type: string
+      required:
+      - title

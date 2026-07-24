@@ -23,6 +23,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SendCodeResponse'
+        '400':
+          description: The request body could not be parsed as JSON.
+        '422':
+          description: The request body is valid JSON but does not match the expected schema.
 components:
   schemas:
     SendCode:
