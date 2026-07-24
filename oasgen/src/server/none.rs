@@ -1,7 +1,6 @@
-use http::Method;
-use oasgen_core::{OaSchema};
 use crate::Server;
-
+use http::Method;
+use oasgen_core::OaSchema;
 
 impl Server<()> {
     pub fn none() -> Self {

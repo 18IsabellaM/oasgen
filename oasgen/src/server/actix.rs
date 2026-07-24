@@ -1,13 +1,13 @@
-use std::str::FromStr;
+use crate::Format;
 #[cfg(feature = "swagger-ui")]
 use actix_web::HttpRequest;
-use actix_web::{web, Error, FromRequest, Handler, HttpResponse, Resource, Responder, Scope};
 use actix_web::http::Method;
-use futures::future::{ok, Ready};
-use openapiv3::OpenAPI;
-use std::sync::Arc;
 use actix_web::http::header::CONTENT_TYPE;
-use crate::Format;
+use actix_web::{Error, FromRequest, Handler, HttpResponse, Resource, Responder, Scope, web};
+use futures::future::{Ready, ok};
+use openapiv3::OpenAPI;
+use std::str::FromStr;
+use std::sync::Arc;
 
 use super::Server;
 
@@ -40,7 +40,7 @@ where
     }
 }
 
-pub type InnerResourceFactory<'a> = Box<dyn ResourceFactory<'a, Output=Resource>>;
+pub type InnerResourceFactory<'a> = Box<dyn ResourceFactory<'a, Output = Resource>>;
 
 fn build_inner_resource<F, Args>(
     path: String,
@@ -53,8 +53,7 @@ where
     F::Output: Responder + 'static,
 {
     Box::new(move || {
-        Resource::new(path.clone())
-            .route(web::route().method(method.clone()).to(handler))
+        Resource::new(path.clone()).route(web::route().method(method.clone()).to(handler))
     })
 }
 
@@ -180,8 +179,10 @@ async fn handler_swagger(
 
         response.headers().iter().for_each(|(k, v)| {
             // actix still using http=0.2
-            let k = actix_web::http::header::HeaderName::from_str(k.as_str()).expect("Invalid header name");
-            let v = actix_web::http::header::HeaderValue::from_bytes(v.as_bytes()).expect("Invalid header value");
+            let k = actix_web::http::header::HeaderName::from_str(k.as_str())
+                .expect("Invalid header name");
+            let v = actix_web::http::header::HeaderValue::from_bytes(v.as_bytes())
+                .expect("Invalid header value");
             builder.append_header((k, v));
         });
         builder.body(response.body_mut().to_owned())
@@ -195,7 +196,7 @@ async fn handler_swagger(
 #[cfg(feature = "actix")]
 mod tests {
     use super::*;
-    use actix_web::{test, App};
+    use actix_web::{App, test};
 
     #[actix_web::test]
     async fn test_swagger_get_index() {

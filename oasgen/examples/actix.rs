@@ -4,7 +4,7 @@
 #[cfg(feature = "swagger-ui")]
 mod inner {
     use actix_web::web::Json;
-    use oasgen::{oasgen, OaSchema, Server};
+    use oasgen::{OaSchema, Server, oasgen};
     use serde::{Deserialize, Serialize};
 
     #[derive(OaSchema, Deserialize)]
@@ -37,7 +37,7 @@ mod inner {
 
     #[tokio::main]
     pub async fn main() -> std::io::Result<()> {
-        use actix_web::{web, App, HttpResponse, HttpServer};
+        use actix_web::{App, HttpResponse, HttpServer, web};
 
         let host = ("0.0.0.0", 5000);
 

@@ -1,5 +1,5 @@
-use pretty_assertions::assert_eq;
 use oasgen::OaSchema;
+use pretty_assertions::assert_eq;
 use serde::{Deserialize, Serialize};
 
 #[derive(OaSchema, Serialize, Deserialize)]

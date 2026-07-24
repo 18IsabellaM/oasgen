@@ -1,5 +1,5 @@
-use openapiv3::{RefOr, Schema, SchemaKind, Type};
 use openapiv3 as oa;
+use openapiv3::{RefOr, Schema, SchemaKind, Type};
 
 use crate::{OaParameter, OaSchema};
 
@@ -21,32 +21,47 @@ impl<T> OaParameter for axum::extract::ConnectInfo<T> {}
 impl OaParameter for http::HeaderMap {}
 impl OaParameter for http::request::Parts {}
 
+/// Expands object schemas into one query parameter per property, marking each
+/// parameter required when the schema lists it in its `required` set.
+fn query_parameters(schemas: Vec<RefOr<Schema>>) -> Vec<RefOr<oa::Parameter>> {
+    schemas
+        .into_iter()
+        .flat_map(|s| s.into_item())
+        .flat_map(|s| match s.kind {
+            // Only object schemas decompose into named query parameters.
+            SchemaKind::Type(Type::Object(o)) => {
+                let required = o.required;
+                Some(
+                    o.properties
+                        .into_iter()
+                        .map(move |(k, v)| (required.contains(&k), k, v)),
+                )
+            }
+            _ => None,
+        })
+        .flatten()
+        .map(|(is_required, k, v)| {
+            // Query strings have no concept of JSON `null`; optionality is
+            // expressed by the parameter being non-required, not by a nullable
+            // schema. Strip any `nullable` flag so an `Option<T>` field renders
+            // the inner type's schema.
+            let v = match v {
+                RefOr::Item(mut schema) => {
+                    schema.nullable = false;
+                    RefOr::Item(schema)
+                }
+                other => other,
+            };
+            let mut parameter = oa::Parameter::query(k, v);
+            parameter.required = is_required;
+            RefOr::Item(parameter)
+        })
+        .collect()
+}
+
 impl<T: OaParameter> OaParameter for axum::extract::Query<T> {
     fn parameters() -> Vec<RefOr<oa::Parameter>> {
-        T::parameter_schemas()
-            .into_iter()
-            .flat_map(|s| s.into_item())
-            .flat_map(|s| match s.kind {
-                SchemaKind::Type(Type::Object(o)) => { Some(o.properties) }
-                _ => None
-            })
-            .flatten()
-            .map(|(k, v)| {
-                // Query strings have no concept of JSON `null`; optionality is
-                // expressed by the parameter being non-required, not by a nullable
-                // schema. Strip any `nullable` flag so an `Option<T>` field renders
-                // the inner type's schema. The parameter stays non-required (the
-                // default for `Parameter::query`).
-                let v = match v {
-                    RefOr::Item(mut schema) => {
-                        schema.nullable = false;
-                        RefOr::Item(schema)
-                    }
-                    other => other,
-                };
-                RefOr::Item(oa::Parameter::query(k, v))
-            })
-            .collect()
+        query_parameters(T::parameter_schemas())
     }
 }
 
@@ -62,9 +77,6 @@ impl<T: OaParameter> OaParameter for axum::extract::Path<T> {
 #[cfg(feature = "qs")]
 impl<T: OaParameter> OaParameter for serde_qs::axum::QsQuery<T> {
     fn parameters() -> Vec<RefOr<oa::Parameter>> {
-        T::parameter_schemas()
-            .into_iter()
-            .map(|s| RefOr::Item(oa::Parameter::query("query", s)))
-            .collect()
+        query_parameters(T::parameter_schemas())
     }
 }

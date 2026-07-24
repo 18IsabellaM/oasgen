@@ -22,8 +22,9 @@ impl<S> Default for Router<S> {
 }
 
 impl<S> Server<Router<S>, OpenAPI>
-    where
-        S: Clone + Send + Sync + 'static {
+where
+    S: Clone + Send + Sync + 'static,
+{
     pub fn axum() -> Self {
         Self::new()
     }
@@ -41,10 +42,10 @@ impl<S> Server<Router<S>, OpenAPI>
     }
 
     pub fn get<F, T>(mut self, path: &str, handler: F) -> Self
-        where
-            F: Handler<T, S>,
-            T: 'static,
-            F: Copy + Send,
+    where
+        F: Handler<T, S>,
+        T: 'static,
+        F: Copy + Send,
     {
         self.add_handler_to_spec(path, Method::GET, &handler);
         self.add_route(path, routing::get(handler));
@@ -52,10 +53,10 @@ impl<S> Server<Router<S>, OpenAPI>
     }
 
     pub fn post<F, T>(mut self, path: &str, handler: F) -> Self
-        where
-            F: Handler<T, S>,
-            T: 'static,
-            F: Copy + Send,
+    where
+        F: Handler<T, S>,
+        T: 'static,
+        F: Copy + Send,
     {
         self.add_handler_to_spec(path, Method::POST, &handler);
         self.add_route(path, routing::post(handler));
@@ -63,10 +64,10 @@ impl<S> Server<Router<S>, OpenAPI>
     }
 
     pub fn put<F, T>(mut self, path: &str, handler: F) -> Self
-        where
-            F: Handler<T, S>,
-            T: 'static,
-            F: Copy + Send,
+    where
+        F: Handler<T, S>,
+        T: 'static,
+        F: Copy + Send,
     {
         self.add_handler_to_spec(path, Method::PUT, &handler);
         self.add_route(path, routing::put(handler));
@@ -74,10 +75,10 @@ impl<S> Server<Router<S>, OpenAPI>
     }
 
     pub fn patch<F, T>(mut self, path: &str, handler: F) -> Self
-        where
-            F: Handler<T, S>,
-            T: 'static,
-            F: Copy + Send,
+    where
+        F: Handler<T, S>,
+        T: 'static,
+        F: Copy + Send,
     {
         self.add_handler_to_spec(path, Method::PATCH, &handler);
         self.add_route(path, routing::patch(handler));
@@ -85,10 +86,10 @@ impl<S> Server<Router<S>, OpenAPI>
     }
 
     pub fn delete<F, T>(mut self, path: &str, handler: F) -> Self
-        where
-            F: Handler<T, S>,
-            T: 'static,
-            F: Copy + Send,
+    where
+        F: Handler<T, S>,
+        T: 'static,
+        F: Copy + Send,
     {
         self.add_handler_to_spec(path, Method::DELETE, &handler);
         self.add_route(path, routing::delete(handler));
@@ -97,8 +98,9 @@ impl<S> Server<Router<S>, OpenAPI>
 }
 
 impl<S> Server<Router<S>, Arc<OpenAPI>>
-    where
-        S: Clone + Send + Sync + 'static {
+where
+    S: Clone + Send + Sync + 'static,
+{
     pub fn into_router(self) -> axum::Router<S> {
         use axum::response::IntoResponse;
 
@@ -110,53 +112,58 @@ impl<S> Server<Router<S>, Arc<OpenAPI>>
         if let Some(json_route) = &self.json_route {
             let spec = self.openapi.as_ref();
             let bytes = serde_json::to_vec(spec).unwrap();
-            router = router.route(&json_route, routing::get(|| async {
-                (
-                    [(
-                        http::header::CONTENT_TYPE,
-                        http::HeaderValue::from_str("application/json").unwrap(),
-                    )],
-                    bytes,
-                ).into_response()
-            }));
+            router = router.route(
+                &json_route,
+                routing::get(|| async {
+                    (
+                        [(
+                            http::header::CONTENT_TYPE,
+                            http::HeaderValue::from_str("application/json").unwrap(),
+                        )],
+                        bytes,
+                    )
+                        .into_response()
+                }),
+            );
         }
 
         if let Some(yaml_route) = &self.yaml_route {
             let spec = self.openapi.as_ref();
             let yaml = serde_yaml::to_string(spec).unwrap();
-            router = router.route(&yaml_route, routing::get(|| async {
-                (
-                    [(
-                        http::header::CONTENT_TYPE,
-                        http::HeaderValue::from_str("text/yaml").unwrap(),
-                    )],
-                    yaml,
-                ).into_response()
-            }));
+            router = router.route(
+                &yaml_route,
+                routing::get(|| async {
+                    (
+                        [(
+                            http::header::CONTENT_TYPE,
+                            http::HeaderValue::from_str("text/yaml").unwrap(),
+                        )],
+                        yaml,
+                    )
+                        .into_response()
+                }),
+            );
         }
 
         #[cfg(feature = "swagger-ui")]
         if let Some(mut path) = self.swagger_ui_route {
-
-            let swagger = self.swagger_ui.expect("Swagger UI route set but no Swagger UI is configured.");
+            let swagger = self
+                .swagger_ui
+                .expect("Swagger UI route set but no Swagger UI is configured.");
             let handler = routing::get(|uri: http::Uri| async move {
                 match swagger.handle_url(&uri) {
                     Some(response) => {
                         let (headers, body) = response.into_parts();
                         axum::response::Response::from_parts(headers, Body::from(body.to_vec()))
                     }
-                    None => {
-                        axum::response::Response::builder()
-                            .status(http::StatusCode::NOT_FOUND)
-                            .body(Body::empty())
-                            .unwrap()
-                    }
+                    None => axum::response::Response::builder()
+                        .status(http::StatusCode::NOT_FOUND)
+                        .body(Body::empty())
+                        .unwrap(),
                 }
             });
-            router = router
-                .route(&format!("{}", &path), handler.clone());
-            router = router
-                .route(&format!("{}{{*rest}}", &path), handler)
+            router = router.route(&format!("{}", &path), handler.clone());
+            router = router.route(&format!("{}{{*rest}}", &path), handler)
         }
         router
     }

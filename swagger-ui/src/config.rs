@@ -1,4 +1,4 @@
-use serde::{Serialize};
+use serde::Serialize;
 
 const SWAGGER_STANDALONE_LAYOUT: &str = "StandaloneLayout";
 
@@ -125,7 +125,6 @@ impl Config {
     }
 }
 
-
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -158,8 +157,6 @@ impl Default for Config {
         }
     }
 }
-
-
 
 #[non_exhaustive]
 #[derive(Default, Serialize, Clone, Debug)]

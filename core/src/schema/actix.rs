@@ -18,7 +18,6 @@ impl OaSchema for actix_web::HttpResponse {
 impl<T> OaParameter for actix_web::web::Data<T> {}
 impl OaParameter for actix_web::HttpRequest {}
 
-
 impl<T: OaParameter> OaParameter for actix_web::web::Path<T> {
     fn parameters() -> Vec<RefOr<oa::Parameter>> {
         T::parameter_schemas()
@@ -34,11 +33,22 @@ impl<T: OaParameter> OaParameter for actix_web::web::Query<T> {
             .into_iter()
             .flat_map(|s| s.into_item())
             .flat_map(|s| match s.kind {
-                SchemaKind::Type(Type::Object(o)) => { Some(o.properties) }
-                _ => None
+                SchemaKind::Type(Type::Object(o)) => {
+                    let required = o.required;
+                    Some(
+                        o.properties
+                            .into_iter()
+                            .map(move |(k, v)| (required.contains(&k), k, v)),
+                    )
+                }
+                _ => None,
             })
             .flatten()
-            .map(|(k, v)| RefOr::Item(oa::Parameter::query(k, v)))
+            .map(|(is_required, k, v)| {
+                let mut parameter = oa::Parameter::query(k, v);
+                parameter.required = is_required;
+                RefOr::Item(parameter)
+            })
             .collect()
     }
 }

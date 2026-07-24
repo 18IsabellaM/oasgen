@@ -1,6 +1,6 @@
-use http::{Method, Version, Uri};
-use openapiv3::Schema;
 use crate::OaSchema;
+use http::{Method, Uri, Version};
+use openapiv3::Schema;
 
 impl OaSchema for Method {
     fn schema() -> Schema {

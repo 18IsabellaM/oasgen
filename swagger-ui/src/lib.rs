@@ -1,12 +1,12 @@
 mod config;
 
 use bytes::Bytes;
+pub use config::{Config, Url};
+use http::response::Response;
+use rust_embed::RustEmbed;
 use std::convert::TryInto;
 use std::error::Error;
 use std::fmt::Debug;
-pub use config::{Config, Url};
-use rust_embed::RustEmbed;
-use http::response::Response;
 
 #[derive(RustEmbed)]
 #[folder = "swagger-ui-dist"]
@@ -36,9 +36,9 @@ impl SwaggerUi {
     }
 
     pub fn handle_url<U>(&self, url: U) -> Option<Response<Bytes>>
-        where
-            U: TryInto<http::Uri> + Debug,
-            <U as TryInto<http::Uri>>::Error: Error
+    where
+        U: TryInto<http::Uri> + Debug,
+        <U as TryInto<http::Uri>>::Error: Error,
     {
         let url = url.try_into().unwrap();
         let path = url.path().strip_prefix(&self.prefix).unwrap();
@@ -46,29 +46,37 @@ impl SwaggerUi {
             "" | "/" => {
                 let f = SwaggerUiDist::get("index.html").unwrap();
                 let body = f.data.to_vec();
-                Some(Response::builder()
-                    .status(200)
-                    .header("Content-Type", HTML_MIME)
-                    .header("Content-Length", body.len())
-                    .body(body.into())
-                    .unwrap())
+                Some(
+                    Response::builder()
+                        .status(200)
+                        .header("Content-Type", HTML_MIME)
+                        .header("Content-Length", body.len())
+                        .body(body.into())
+                        .unwrap(),
+                )
             }
             "/swagger-initializer.js" => {
                 let f = SwaggerUiDist::get("swagger-initializer.js").unwrap();
                 let body = String::from_utf8(f.data.to_vec()).unwrap();
                 let config = serde_json::to_string(&self.config).unwrap();
                 let body = body.replace("{config}", &config).into_bytes();
-                Some(Response::builder()
-                    .status(200)
-                    .header("Content-Type", JS_MIME)
-                    .header("Content-Length", body.len())
-                    .body(body.into())
-                    .unwrap())
+                Some(
+                    Response::builder()
+                        .status(200)
+                        .header("Content-Type", JS_MIME)
+                        .header("Content-Length", body.len())
+                        .body(body.into())
+                        .unwrap(),
+                )
             }
             z => {
                 let f = SwaggerUiDist::get(&z[1..])?;
                 let body = f.data.to_vec();
-                let ext = std::path::Path::new(z).extension().unwrap().to_str().unwrap();
+                let ext = std::path::Path::new(z)
+                    .extension()
+                    .unwrap()
+                    .to_str()
+                    .unwrap();
                 let mime = match ext {
                     "html" => HTML_MIME,
                     "js" => JS_MIME,
@@ -76,12 +84,14 @@ impl SwaggerUi {
                     "png" => PNG_MIME,
                     _ => DEFAULT_MIME,
                 };
-                Some(Response::builder()
-                    .status(200)
-                    .header("Content-Type", mime)
-                    .header("Content-Length", body.len())
-                    .body(body.into())
-                    .unwrap())
+                Some(
+                    Response::builder()
+                        .status(200)
+                        .header("Content-Type", mime)
+                        .header("Content-Length", body.len())
+                        .body(body.into())
+                        .unwrap(),
+                )
             }
         }
     }
@@ -122,8 +132,7 @@ mod test {
 
     #[test]
     fn test_prefix_stripping() {
-        let ui = SwaggerUi::default()
-            .prefix("/docs");
+        let ui = SwaggerUi::default().prefix("/docs");
 
         let res = ui.handle_url("/docs").unwrap();
         assert_eq!(res.status(), 200);
@@ -136,6 +145,5 @@ mod test {
         let res = ui.handle_url("/docs/swagger-initializer.js").unwrap();
         assert_eq!(res.status(), 200);
         assert_eq!(res.headers().get("Content-Type").unwrap(), JS_MIME);
-
     }
 }

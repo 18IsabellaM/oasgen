@@ -1,8 +1,8 @@
 use quote::ToTokens;
 use serde_derive_internals::ast::Field;
 use structmeta::StructMeta;
-use syn::spanned::Spanned;
 use syn::LitStr;
+use syn::spanned::Spanned;
 
 /// Available attributes on a struct
 /// For attributes that have the same name as `serde` attributes, you can use either one.

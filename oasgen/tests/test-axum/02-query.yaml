@@ -8,11 +8,13 @@ paths:
       operationId: list_tasks
       parameters:
       - name: completed
+        required: true
         schema:
           type: boolean
         in: query
         style: form
       - name: assigned_to
+        required: true
         schema:
           type: integer
         in: query

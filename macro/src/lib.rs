@@ -1,19 +1,22 @@
 #![allow(non_snake_case)]
 
+use crate::attr::{OperationAttributes, get_docstring};
+use crate::util::derive_oaschema_newtype;
 use proc_macro::TokenStream;
 use quote::quote;
 use serde_derive_internals::{
-    ast::{Container, Data, Style},
     Ctxt, Derive,
+    ast::{Container, Data, Style},
 };
-use syn::{PathArguments, GenericArgument, TypePath, Type, ReturnType, FnArg, parse_macro_input, DeriveInput,visit::Visit};
 use std::collections::{BTreeMap, BTreeSet};
+use syn::{
+    DeriveInput, FnArg, GenericArgument, PathArguments, ReturnType, Type, TypePath,
+    parse_macro_input, visit::Visit,
+};
 use util::{derive_oaschema_enum, derive_oaschema_struct};
-use crate::attr::{get_docstring, OperationAttributes};
-use crate::util::derive_oaschema_newtype;
 
-mod util;
 mod attr;
+mod util;
 
 #[proc_macro_derive(OaSchema, attributes(oasgen))]
 pub fn derive_oaschema(item: TokenStream) -> TokenStream {
@@ -51,7 +54,10 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
 
     for (status_tokens, message) in &collector.errors {
         let key = status_tokens.to_string();
-        errors_by_code.entry(key).or_default().insert(message.clone());
+        errors_by_code
+            .entry(key)
+            .or_default()
+            .insert(message.clone());
     }
 
     let mut attr =
@@ -110,7 +116,11 @@ pub fn oasgen(attr: TokenStream, input: TokenStream) -> TokenStream {
             let description = if messages_vec.len() == 1 {
                 messages_vec[0].clone()
             } else {
-                let joined = messages_vec.iter().map(|s| s.as_str()).collect::<Vec<_>>().join("\n- ");
+                let joined = messages_vec
+                    .iter()
+                    .map(|s| s.as_str())
+                    .collect::<Vec<_>>()
+                    .join("\n- ");
                 format!("Possible reasons:\n- {}", joined)
             };
             let status_tokens_2: proc_macro2::TokenStream = status_tokens.clone().into();

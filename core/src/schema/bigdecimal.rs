@@ -1,3 +1,6 @@
-use crate::{impl_oa_schema, Schema};
+use crate::{Schema, impl_oa_schema};
 
-impl_oa_schema!(::bigdecimal::BigDecimal, Schema::new_string().with_format("decimal"));
+impl_oa_schema!(
+    ::bigdecimal::BigDecimal,
+    Schema::new_string().with_format("decimal")
+);

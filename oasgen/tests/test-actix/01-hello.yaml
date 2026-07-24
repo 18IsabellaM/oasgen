@@ -24,6 +24,7 @@ paths:
       operationId: get_code
       parameters:
       - name: code
+        required: true
         schema:
           type: string
         in: query

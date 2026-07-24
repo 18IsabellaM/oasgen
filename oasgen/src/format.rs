@@ -34,7 +34,10 @@ impl actix_web::FromRequest for Format {
     type Error = Infallible;
     type Future = Ready<Result<Self, Infallible>>;
 
-    fn from_request(req: &actix_web::HttpRequest, payload: &mut actix_web::dev::Payload) -> Self::Future {
+    fn from_request(
+        req: &actix_web::HttpRequest,
+        payload: &mut actix_web::dev::Payload,
+    ) -> Self::Future {
         ready(Ok(Self::sync_from_req(req)))
     }
 }

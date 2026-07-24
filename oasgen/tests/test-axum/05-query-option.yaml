@@ -8,6 +8,7 @@ paths:
       operationId: list_assets
       parameters:
       - name: owner
+        required: true
         schema:
           type: integer
         in: query
